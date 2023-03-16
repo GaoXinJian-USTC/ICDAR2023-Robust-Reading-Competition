@@ -1,0 +1,96 @@
+Global:
+  use_gpu: true
+  epoch_num: 100
+  log_smooth_window: 20
+  print_batch_step: 4
+  save_model_dir: ./output/cls_icdar/mv3/
+  save_epoch_step: 50
+  # evaluation is run every 5000 iterations after the 4000th iteration
+  eval_batch_step: [0, 50]
+  cal_metric_during_train: True
+  pretrained_model:
+  checkpoints:
+  save_inference_dir:
+  use_visualdl: False
+  # infer_img: doc/imgs_words_en/word_10.png
+  label_list: ['0','1','2']
+
+Architecture:
+  model_type: cls
+  algorithm: CLS
+  Transform:
+  Backbone:
+    # name: MobileNetV3
+    name: ResNet
+    layers: 50
+    # scale: 0.5
+    # model_name: large
+  Neck:
+  Head:
+    name: ClsHead
+    class_dim: 3
+
+Loss:
+  name: ClsLoss
+
+Optimizer:
+  name: Adam
+  beta1: 0.9
+  beta2: 0.999
+  lr:
+    name: Cosine
+    learning_rate: 0.001
+  regularizer:
+    name: 'L2'
+    factor: 0
+
+PostProcess:
+  name: ClsPostProcess
+
+Metric:
+  name: ClsMetric
+  main_indicator: acc
+
+Train:
+  dataset:
+    name: SimpleDataSet
+    data_dir: /home/data3/gaoxinjian/icdar/ReST_train/cls_dataset/
+    label_file_list:
+      - /home/data3/gaoxinjian/icdar/ReST_train/cls_dataset/label.txt
+    transforms:
+      - DecodeImage: # load image
+          img_mode: BGR
+          channel_first: False
+      - ClsLabelEncode: # Class handling label
+      - BaseDataAugmentation:
+      - RandAugment:
+      - ClsResizeImg:
+          image_shape: [3, 192, 192]
+      - KeepKeys:
+          keep_keys: ['image', 'label'] # dataloader will return list in this order
+  loader:
+    shuffle: True
+    batch_size_per_card: 32
+    drop_last: True
+    num_workers: 2
+
+Eval:
+  dataset:
+    name: SimpleDataSet
+    data_dir: /home/data3/gaoxinjian/icdar/ReST_train/cls_dataset
+    label_file_list:
+      - /home/data3/gaoxinjian/icdar/ReST_train/cls_dataset/label_text.txt
+    transforms:
+      - DecodeImage: # load image
+          img_mode: BGR
+          channel_first: False
+      - ClsLabelEncode: # Class handling label
+      - ClsResizeImg:
+          image_shape: [3, 192, 192]
+      - KeepKeys:
+          keep_keys: ['image', 'label'] # dataloader will return list in this order
+  loader:
+    shuffle: False
+    drop_last: False
+    batch_size_per_card: 16
+    num_workers: 2

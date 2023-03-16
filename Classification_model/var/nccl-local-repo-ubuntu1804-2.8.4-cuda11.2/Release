@@ -1,0 +1,13 @@
+Origin: NVIDIA
+Label: NVIDIA CUDA
+Architecture: builds
+Date: Wed, 03 Feb 2021 00:26:58 +0000
+MD5Sum:
+ eaa6014ced6cc990b27cda15fb57185a             2039 Packages
+ 004f315257f490403482d6a0cd7be5a6              947 Packages.gz
+SHA1:
+ 6566c5091ffe8fac7a32503a4c1640e049539293             2039 Packages
+ 1c21e059dcbd7e7d67d60d82130c3b49f56c9f0f              947 Packages.gz
+SHA256:
+ 8cbebfc790919919c9f4bb256a8403750b89124d82ebcd4d4e23434dedbac6d5             2039 Packages
+ f43a49c11d642c1b7f92cb1c8292e6d3c3dbecd6e7cd566f48ff3f9d96444c5f              947 Packages.gz
